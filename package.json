@@ -1,0 +1,19 @@
+{
+  "name": "horizon-auth",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "hbs": "~4.0.4",
+    "http-errors": "~1.6.3",
+    "method-override": "^3.0.0",
+    "morgan": "~1.9.1",
+    "request": "^2.88.0",
+    "pg": "^7.18.1",
+    "useragent": "^2.3.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "development": {
+    "login": {
+      "response_type": "code",
+      "authorization_url": "https://login.eveonline.com/oauth/authorize",
+      "redirect_uri": "http://localhost:3001/login/callback",
+      "client_id": "<>",
+      "client_secret": "<>",
+      "scope": "",
+      "grant_type": "authorization_code",
+      "token_host": "login.eveonline.com",
+      "token_path": "/oauth/token",
+      "verification_url": "https://login.eveonline.com/oauth/verify"
+    }
+  }
+}
