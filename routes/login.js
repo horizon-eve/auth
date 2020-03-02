@@ -1,17 +1,19 @@
-var express = require('express');
+let express = require('express');
 const config = require('../bin/config');
 const auth = require('../bin/auth');
-var router = express.Router();
+let router = express.Router();
+let cors = require('cors')
 
 /* Login Page. */
 router.get('/', function(req, res, next) {
     res.render('login')
 });
 
-router.get('/start', function(req, res) {
-    let referrer = req.query.referrer ? req.query.referrer: req.headers.referer
+router.post('/start', function(req, res) {
+    let referrer = req.body.callback
     let useragent = req.headers['user-agent']
-    auth.startSession(referrer, useragent, function(errors, state) {
+    let verify = req.body.verify
+    auth.startSession(referrer, useragent, verify, function(errors, state) {
         if (errors) {
             res.statusCode = 400
             res.send(errors)
@@ -31,14 +33,35 @@ router.get('/callback',
     function(req, res, next) {
         let state = req.query.state
         let code = req.query.code
-        auth.continueAuthorization(state, code, function(errors, redirect_url, token) {
+        let useragent = req.headers['user-agent']
+        auth.continueAuthorization(state, code, useragent, function(errors, redirect_url) {
             if (errors) {
                 console.log("errors: " + errors)
                 res.redirect('/error?' + 'status=400&reason=' + errors);
             }
             else {
-                res.cookie("hrsession", token, { maxAge: 900000})
                 res.redirect(redirect_url)
+            }
+        });
+    }
+);
+
+let corsVerify = { origin: config.verify.origin }
+router.options('/verify', cors(corsVerify))
+
+router.post('/verify', cors(corsVerify),
+    function(req, res, next) {
+        let verify = req.body.verify
+        let useragent = req.headers['user-agent']
+        auth.completeAuthorization(verify, useragent, function(errors, user_token) {
+            if (errors) {
+                console.log("errors: " + errors)
+                res.statusCode = 400
+                res.send(errors)
+            }
+            else {
+                console.log(`authorization verified: ${verify}`)
+                res.send(user_token)
             }
         });
     }

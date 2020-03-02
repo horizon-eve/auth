@@ -4,18 +4,19 @@ const cfg = require('../bin/config')
     , request = require('request')
 
 
-function startSession(referrer, useragent, done) {
+function startSession(referrer, useragent, verify, done) {
     // tbd validate better
     if (!referrer) return done("please specify referrer")
-    if (!useragent) return done("please specify user agent")
+    if (!useragent) return done("can not process this request")
+    if (!verify) return done("please specify verification token")
 
-    session.newSession(referrer, useragent, done)
+    session.newSession(referrer, useragent, verify, done)
 }
 
-function continueAuthorization(state_id, code, done) {
+function continueAuthorization(state_id, code, useragent, done) {
     session.retrieveSession(state_id, done, function(state) {
         // Should not reuse existing session, let it start over
-        if (state.auth_info || state.char_info || state.error) {
+        if (state.committed === '1' || state.auth_info || state.char_info || state.error || state.user_agent !== useragent) {
             return done('please start over authorization')
         }
         exchangeAuthorizationCode(state, code, done)
@@ -43,16 +44,16 @@ function exchangeAuthorizationCode(state, code, done) {
                     obtainCharacterInfo(state, JSON.parse(d), done)
                 }
                 else {
-                    const err = `authres: ${authres}`
-                    session.update(state, {error: err})
-                    done(err)
+                    const errors = `authres: ${authres}`
+                    session.updateSession(state, {error: errors})
+                    done(errors)
                 }
             })
         });
     authreq.on('error', function (error) {
-        const err = `authreq: ${error}`
-        session.update(state, {error: err})
-        done(err)
+        const errors = `authreq: ${error}`
+        session.updateSession(state, {error: errors})
+        done(errors)
     })
     authreq.write(data)
     authreq.end()
@@ -66,17 +67,24 @@ function obtainCharacterInfo(state, auth, done) {
         },
         function (error, response, body) {
             if(error){
-                const err = `verify: ${error}`
-                session.update(state, {error: err})
-                done(err)
-
+                const errors = `verify: ${error}`
+                session.updateSession(state, {error: errors})
+                done(errors)
             }
             else{
                 // Authentication Process succeeded
-                session.completeSession(state, auth, JSON.parse(body), done)
+                session.updateSession(state, {auth_info: auth, char_info: JSON.parse(body)})
+                done(null, state.redirect_url)
             }
         });
 }
+
+function completeAuthorization(verify, useragent, done) {
+    if (!verify) return done("please specify client to verify")
+    if (!useragent) return done("can not process this request")
+    session.completeSession(verify, useragent, done)
+}
+
 
 function authHeader() {
     return 'Basic ' + Buffer.from(cfg.login.client_id + ':' + cfg.login.client_secret).toString('base64');
@@ -84,3 +92,4 @@ function authHeader() {
 
 module.exports.continueAuthorization = continueAuthorization
 module.exports.startSession = startSession
+module.exports.completeAuthorization = completeAuthorization;

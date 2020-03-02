@@ -11,6 +11,9 @@
       "token_host": "login.eveonline.com",
       "token_path": "/oauth/token",
       "verification_url": "https://login.eveonline.com/oauth/verify"
+    },
+    "verify": {
+      "origin": "http://localhost:8080"
     }
   }
 }
