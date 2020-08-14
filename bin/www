@@ -20,7 +20,7 @@ let server
 var port = normalizePort(process.env.PORT || config.server.port || '3001');
 app.set('port', port);
 
-if (environment == 'prod' || config.server.ssl) {
+if (environment === 'production' || config.server.ssl) {
   const https = require('https')
   const helmet = require('helmet')
   const options = {
