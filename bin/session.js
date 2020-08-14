@@ -1,12 +1,14 @@
 const { Client } = require('pg')
     ,useragent = require('useragent');
 
+const config = require('./config')
+
 const client = new Client({
-    user: 'auth',
-    host: 'localhost',
-    database: 'horizon',
-    password: 'auth',
-    port: 5432,
+    user: config.db.user,
+    host: config.db.host,
+    database: config.db.database,
+    password: config.db.password,
+    port: 5432
 })
 
 client.connect()
@@ -48,7 +50,7 @@ function updateSession(session, data) {
 
 function completeSession(verify, user_agent, done) {
     const device = get_device(user_agent)
-    let sql = 'select * from user_sign_in($1, $2, $3)' // SQLI
+    let sql = 'select * from user_sign_in($1, $2, $3)'
     client.query(sql, [verify, user_agent, device])
         .then(result => {
             done(null, result.rows[0].user_sign_in)

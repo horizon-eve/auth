@@ -53,15 +53,16 @@ router.post('/verify', cors(corsVerify),
     function(req, res, next) {
         let verify = req.body.verify
         let useragent = req.headers['user-agent']
-        auth.completeAuthorization(verify, useragent, function(errors, user_token) {
+        auth.completeAuthorization(verify, useragent, function(errors, auth) {
             if (errors) {
-                console.log("errors: " + errors)
-                res.statusCode = 400
-                res.send(errors)
+              console.log("errors: " + errors)
+              res.statusCode = 400
+              res.send(errors)
             }
             else {
-                console.log(`authorization verified: ${verify}`)
-                res.send(user_token)
+              console.log(`authorization verified: ${verify}`)
+              res.setHeader('Content-Type', 'application/json');
+              res.send(auth)
             }
         });
     }

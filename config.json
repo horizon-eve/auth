@@ -8,12 +8,26 @@
       "client_secret": "<>",
       "scope": "",
       "grant_type": "authorization_code",
+      "refresh_grant_type": "refresh_token",
       "token_host": "login.eveonline.com",
       "token_path": "/oauth/token",
       "verification_url": "https://login.eveonline.com/oauth/verify"
     },
     "verify": {
       "origin": "http://localhost:8080"
+    },
+    "server": {
+      "ssl": false,
+      "ssl_key_path": "/does/not/matter",
+      "ssl_cert_path": "/does/not/matter",
+      "port": 3001
+    },
+    "db": {
+      "user": "auth",
+      "host": "localhost",
+      "database": "racopub",
+      "password": "@auth_pwd@",
+      "port": 5432
     }
   }
 }

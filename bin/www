@@ -5,24 +5,35 @@
  */
 
 // environment variables
-process.env.NODE_ENV = 'development';
+let environment = (process.env.NODE_ENV || 'development').toLowerCase()
 
 var app = require('../app');
 var debug = require('debug')('horizon-eve:server');
-var http = require('http');
+let config = require('./config')
+let fs = require("fs")
+let server
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3001');
+var port = normalizePort(process.env.PORT || config.server.port || '3001');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
+if (environment == 'prod' || config.server.ssl) {
+  const https = require('https')
+  const helmet = require('helmet')
+  const options = {
+    key: fs.readFileSync(config.server.ssl_key_path),
+    cert: fs.readFileSync(config.server.ssl_cert_path)
+  };
+  server = https.createServer(options, app);
+  app.use(helmet())
+}
+else {
+  const http = require('http');
+  server = http.createServer(app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.

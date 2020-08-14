@@ -59,6 +59,40 @@ function exchangeAuthorizationCode(state, code, done) {
     authreq.end()
 }
 
+function refreshToken(done) {
+    var data = "grant_type=" + cfg.login.refresh_grant_type + "&refresh_token=" + code
+    var authreq = https.request(
+      {
+          method: 'POST',
+          hostname: cfg.login.token_host,
+          port: 443,
+          path: cfg.login.token_path,
+          headers: {
+              'Authorization': authHeader(),
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Host': cfg.login.token_host
+          }
+      },
+      function (authres) {
+          authres.on('data', function (d) {
+              if (authres.statusCode == 200) {
+              }
+              else {
+                  const errors = `authres: ${authres}`
+                  session.updateSession(state, {error: errors})
+                  done(errors)
+              }
+          })
+      });
+    authreq.on('error', function (error) {
+        const errors = `authreq: ${error}`
+        session.updateSession(state, {error: errors})
+        done(errors)
+    })
+    authreq.write(data)
+    authreq.end()
+}
+
 function obtainCharacterInfo(state, auth, done) {
     request(
         {
