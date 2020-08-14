@@ -1,5 +1,6 @@
 const { Client } = require('pg')
-    ,useragent = require('useragent');
+    ,useragent = require('useragent')
+    ,fs = require("fs")
 
 const config = require('./config')
 
@@ -8,7 +9,14 @@ const client = new Client({
     host: config.db.host,
     database: config.db.database,
     password: config.db.password,
-    port: 5432
+    port: config.db.port,
+    // this object will be passed to the TLSSocket constructor
+    ssl: {
+      rejectUnauthorized: config.db.ssl.reject_unauthorized,
+    //  ca: fs.readFileSync('/path/to/server-certificates/root.crt').toString(),
+      key: fs.readFileSync(config.db.ssl.key_file).toString(),
+      cert: fs.readFileSync(config.db.ssl.cert_file).toString(),
+    }
 })
 
 client.connect()

@@ -25,7 +25,8 @@ if (environment === 'production' || config.server.ssl) {
   const helmet = require('helmet')
   const options = {
     key: fs.readFileSync(config.server.ssl_key_path),
-    cert: fs.readFileSync(config.server.ssl_cert_path)
+    cert: fs.readFileSync(config.server.ssl_cert_path),
+    ca: fs.readFileSync(config.server.ssl_ca)
   };
   server = https.createServer(options, app);
   app.use(helmet())
