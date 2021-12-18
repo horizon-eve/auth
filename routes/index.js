@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.send('Horizon Auth Service: ' + req.query.auth)
+    res.send('Horizon Auth Service. To start, navigate: /login')
 });
 
 module.exports = router;

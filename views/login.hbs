@@ -1,6 +1,8 @@
 <div class="container">
     <h1>Horizon</h1>
-    <a href="/login/start">
-        <img src="//web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt="Login"/>
-    </a>
+    <form action="/login/start" method="POST">
+        <a href="#" onclick="this.closest('form').submit();return false;">
+            <img src="//web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt="Login"/>
+        </a>
+    </form>
 </div>
