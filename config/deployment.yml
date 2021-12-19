@@ -22,6 +22,12 @@ spec:
       containers:
         - name: horizon-auth
           image: <IMAGE>
+          env:
+            - name: CONFIG_OVERRIDE
+              valueFrom:
+                secretKeyRef:
+                  name: horizon-auth-secrets
+                  key: config-override
           ports:
             - containerPort: 80
           resources:
