@@ -39,7 +39,7 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 3001
+      port: 80
       targetPort: 3001
   selector:
     app: horizon-auth
