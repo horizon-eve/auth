@@ -1,5 +1,5 @@
 const cfg = require('../bin/config')
-    , session = require('../bin/session')
+    , session = require('./session')
     , https = require('https')
     , request = require('request')
 

@@ -28,6 +28,9 @@
       "database": "racopub",
       "password": "@auth_pwd@",
       "port": 5432
+    },
+    "session": {
+      "provider": "session-mem"
     }
   }
 }

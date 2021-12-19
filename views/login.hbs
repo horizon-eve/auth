@@ -4,5 +4,8 @@
         <a href="#" onclick="this.closest('form').submit();return false;">
             <img src="//web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt="Login"/>
         </a>
+        <input name="callback" type="hidden" value="/login/verify">
+        <input name="verify" type="hidden" value="12345678910">
+        <input name="authHref" type="hidden" value="/login/start">
     </form>
 </div>
