@@ -29,6 +29,18 @@ spec:
                 secretKeyRef:
                   name: horizon-auth-secrets
                   key: config-override
+            - name: PGHOST
+              value: postgres-service
+            - name: AUTHDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: postgres-db
+            - name: AUTHPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: auth-password
           ports:
             - containerPort: 80
           resources:

@@ -24,13 +24,17 @@
     },
     "db": {
       "user": "auth",
-      "host": "localhost",
+      "host": {"ENV": "PGHOST"},
       "database": "racopub",
       "password": "@auth_pwd@",
-      "port": 5432
+      "port": 5432,
+      "max_connections": 10,
+      "idle_timeout": 30000,
+      "db_connect_timeout": 2000
     },
     "session": {
       "provider": "session-mem"
     }
   }
 }
+

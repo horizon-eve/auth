@@ -8,9 +8,30 @@ let effective_config
 if (process.env.CONFIG_OVERRIDE) {
   let config_override = JSON.parse(process.env.CONFIG_OVERRIDE)
   if (!config_override[environment]) throw new Error('no config override for env: ' + environment)
-  effective_config = deepMerge(default_config[environment], config_override[environment])
+  effective_config = bindEnvironment(deepMerge(default_config[environment], config_override[environment]))
 } else {
-  effective_config = default_config[environment]
+  effective_config = bindEnvironment(default_config[environment])
+}
+
+function bindEnvironment(config) {
+  if (typeof config !== 'object' ) return false
+  for (const prop in config) {
+    if (!Object.prototype.hasOwnProperty.call(config, prop)) continue // take into consideration only object's own properties.
+    let val = config[prop]
+    if (typeof val === 'object') {
+      if (val.ENV) {
+        config[prop] = process.env[val.ENV]
+      } else {
+        bindEnvironment(val)
+      }
+    } else if (val.concat) {
+      // Walk through array
+      for (const el in val) {
+        bindEnvironment(el)
+      }
+    }
+  }
+  return config
 }
 
 // Credits: curveball from stackoverflow.com (https://stackoverflow.com/users/7355533/curveball)
