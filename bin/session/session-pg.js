@@ -11,7 +11,7 @@ const pool = new Pool({
   port: config.db.port,
   max: config.db.max_connections,
   idleTimeoutMillis: config.db.idle_timeout,
-  connectionTimeoutMillis: config.db_connect_timeout
+  connectionTimeoutMillis: config.db.connect_timeout
 })
 
 get_client(function (client) {
