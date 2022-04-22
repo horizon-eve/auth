@@ -1,11 +1,11 @@
 <div class="container">
     <h1>Horizon</h1>
-    <form action="/login/start" method="POST">
+    <form action="/login/user" method="POST">
         <a href="#" onclick="this.closest('form').submit();return false;">
             <img src="//web.ccpgamescdn.com/eveonlineassets/developers/eve-sso-login-white-large.png" alt="Login"/>
         </a>
         <input name="callback" type="hidden" value="/login/verify">
         <input name="verify" type="hidden" value="12345678910">
-        <input name="authHref" type="hidden" value="/login/start">
+        <input name="scope" type="hidden" value="esi-characters.read_blueprints.v1">
     </form>
 </div>

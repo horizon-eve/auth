@@ -20,7 +20,8 @@
       "ssl": false,
       "ssl_key_path": "/does/not/matter",
       "ssl_cert_path": "/does/not/matter",
-      "port": 3001
+      "port": 3001,
+      "auth_header": "x-hr-authtoken"
     },
     "db": {
       "user": "auth",

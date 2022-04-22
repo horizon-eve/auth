@@ -5,3 +5,8 @@ This service implements eve sso authentication flow as described here: https://d
 
 Requires database to store auth data and manage authentication for dependent services
 
+## Features
+1. Add / Remove character to user
+   1. SSO Step 1: POST /login/link (with valid auth header)
+   2. SSO Step 2: GET /login/callback
+   3. SSO Step 3: POST /login/verify
