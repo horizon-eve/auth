@@ -80,21 +80,6 @@ router.delete('/user/characters/:character_id', function(req, res) {
   })
 });
 
-function handleStartSessionResponse(res, errors, state, scope) {
-  if (errors) {
-    error_response(res, errors)
-  }
-  else {
-    res.redirect(config.login.authorization_url
-      + '?response_type=' + encodeURIComponent(config.login.response_type)
-      + '&redirect_uri=' + encodeURIComponent(config.login.redirect_uri)
-      + '&client_id=' + encodeURIComponent(config.login.client_id)
-      + '&scope=' + encodeURIComponent((scope ? scope: config.login.scope))
-      + '&state=' + encodeURIComponent(state))
-  }
-}
-
-
 /**
  * SSO Callback
  */
@@ -105,8 +90,7 @@ router.get('/callback',
         let useragent = req.headers['user-agent']
         auth.continueAuthorization(state, code, useragent, function(errors, redirect_url) {
             if (errors) {
-                console.log("errors: " + errors)
-                res.redirect('/error?' + 'status=400&reason=' + errors);
+              handleAuthResponse(res, errors, null)
             }
             else {
                 res.redirect(redirect_url)
@@ -132,9 +116,31 @@ router.post('/verify', cors(corsVerify),
     }
 );
 
+router.get('/error', function(req, res, next) {
+  res.status(req.query.status)
+  res.send(req.query.reason)
+});
+
+
+function handleStartSessionResponse(res, errors, state, scope) {
+  if (errors) {
+    error_response(res, errors)
+  }
+  else {
+    res.redirect(config.login.authorization_url
+      + '?response_type=' + encodeURIComponent(config.login.response_type)
+      + '&redirect_uri=' + encodeURIComponent(config.login.redirect_uri)
+      + '&client_id=' + encodeURIComponent(config.login.client_id)
+      + '&scope=' + encodeURIComponent((scope ? scope: config.login.scope))
+      + '&state=' + encodeURIComponent(state))
+  }
+}
+
 function handleAuthResponse(res, errors, auth) {
   if (errors) {
-    console.log("errors: " + errors)
+    if (errors instanceof Error) {
+      console.error("TODO: generate erorr id", errors)
+    }
     error_response(res, errors)
   }
   else {
@@ -143,15 +149,9 @@ function handleAuthResponse(res, errors, auth) {
   }
 }
 
-router.get('/error', function(req, res, next) {
-    res.status(req.query.status)
-    res.send(req.query.reason)
-});
-
-
 function error_response (res, errors) {
   res.setHeader('Content-Type', 'application/json');
-  res.status(errors.status).send({
+  res.status(errors.status ? errors.status : 500).send({
     message: errors.message ? errors.message : errors,
     status: errors.status ? errors.status : 500,
     timestamp: new Date()

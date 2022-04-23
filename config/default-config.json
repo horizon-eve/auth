@@ -36,6 +36,34 @@
     "session": {
       "provider": "session-mem"
     }
+  },
+  "test": {
+    "login": {
+      "response_type": "code",
+      "authorization_url": "https://test_auth_url",
+      "redirect_uri": "http://test_redirect_url",
+      "client_id": "test_client_id",
+      "client_secret": "test_client_secret",
+      "scope": "test_scope",
+      "grant_type": "authorization_code",
+      "refresh_grant_type": "refresh_token",
+      "token_host": "test_token_host",
+      "token_path": "/oauth/token",
+      "verification_url": "https://test_verify"
+    },
+    "verify": {
+      "origin": "http://localhost:3001"
+    },
+    "server": {
+      "ssl": false,
+      "ssl_key_path": "/does/not/matter",
+      "ssl_cert_path": "/does/not/matter",
+      "port": 3001,
+      "auth_header": "x-hr-authtoken"
+    },
+    "session": {
+      "provider": "session-mem"
+    }
   }
 }
 

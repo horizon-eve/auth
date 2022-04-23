@@ -81,7 +81,7 @@ function retrieveSession(session_id, done, next) {
         .then(result => {
           let session = result.rows[0]
           if (!session)
-            return done(`state ${session_id}`)
+            return done({status: 404, message: 'state'})
           next(session, done)
         })
         .catch(e => done(`get session: ${e}`))

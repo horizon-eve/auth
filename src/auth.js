@@ -1,4 +1,4 @@
-const cfg = require('.//config')
+const cfg = require('./config')
     , session = require('./session')
     , https = require('https')
     , request = require('request')
@@ -39,6 +39,9 @@ function refreshUserToken(useragent, auth_token, done) {
 }
 
 function continueAuthorization(state_id, code, useragent, done) {
+    if (!useragent) return done({status: 400, message: "can not process this request"})
+    if (!state_id) return done({status: 400, message: "please specify state"})
+    if (!code) return done({status: 400, message: "please specify code"})
     session.retrieveSession(state_id, done, function(state) {
         // Should not reuse existing session, let it start over
         if (state.committed === '1' || state.auth_info || state.char_info || state.error || state.user_agent !== useragent) {

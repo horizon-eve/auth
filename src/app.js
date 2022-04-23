@@ -4,8 +4,8 @@ var path = require('path');
 var logger = require('morgan');
 var methodOverride = require('method-override');
 
-var indexRouter = require('./routes/index');
-var loginRouter = require('./routes/login');
+var indexRouter = require('../routes');
+var loginRouter = require('../routes/login');
 
 var app = express();
 
@@ -30,6 +30,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
+  console.error(err)
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page

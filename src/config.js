@@ -1,7 +1,7 @@
 
 const default_config = require('../config/default-config.json');
 const environment = process.env.NODE_ENV || 'development';
-if (!default_config[environment]) throw 'no config for env: ' + environment
+if (!default_config[environment]) throw 'no default config for env: ' + environment
 
 let effective_config
 
