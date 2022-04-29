@@ -41,7 +41,7 @@ jobs:
           npm install
           npm ci
       # build and test the apps
-      - name: build
+      - name: Run tests
         run: |
           npm run test
   push_deploy:
